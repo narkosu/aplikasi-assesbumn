@@ -51,7 +51,7 @@ return array(
 		// uncomment the following to use a MySQL database
 		
 		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=bumn_baru',
+			'connectionString' => 'mysql:host=localhost;dbname=ara_bumn_assessment',
 			'emulatePrepare' => true,
 			'username' => 'root',
 			'password' => '',
