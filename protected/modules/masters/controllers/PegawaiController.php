@@ -7,6 +7,7 @@ class PegawaiController extends Controller
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
 	public $layout='//layouts/main';
+	public $menuactive='pegawai';
 
 	/**
 	 * @return array action filters
@@ -131,10 +132,16 @@ class PegawaiController extends Controller
 			$model->attributes=$_GET['Pegawai'];
     
     $params = array();
-		$this->render('admin',array(
+    
+    $this->render('lists',array(
 			'model'=>$model,
       'params'=>$params  
 		));
+    
+		/*$this->render('admin',array(
+			'model'=>$model,
+      'params'=>$params  
+		));*/
 	}
 
 	/**

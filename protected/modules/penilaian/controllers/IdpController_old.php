@@ -3,8 +3,7 @@
 class IdpController extends Controller {
 
     public $layout = '//layouts/main';
-    public $menuactive = 'form_idp';
-    
+
     public function filters() {
         return array(
             'accessControl',

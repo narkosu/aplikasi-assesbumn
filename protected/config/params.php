@@ -11,7 +11,8 @@ $formula[$kemenhub][6][101] = '(INPUT/DEFAULT)*(NILAI_JENIS_KOPETENSI/100)';
 // this contains the application parameters that can be maintained via GUI
 return array(
 	// this is displayed in the header section
-	'title'=>'My Yii Blog',
+	'defaultDepartement'=>3,
+  'title'=>'My Yii Blog',
 	// this is used in error pages
 	'adminEmail'=>'webmaster@example.com',
 	// number of posts displayed per page

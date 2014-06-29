@@ -18,13 +18,10 @@ Yii::app()->clientscript
         <title><?php echo CHtml::encode($this->pageTitle); ?></title>
         <meta name="description" content="">
         <meta name="author" content="">
-
-
         <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
         <!--[if lt IE 9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
-
         <!-- Le fav and touch icons -->
         <link rel="shortcut icon" href="images/favicon.ico">
         <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
@@ -45,7 +42,10 @@ Yii::app()->clientscript
                     <Div style="float:left;">
                         <ul class="menu-drop" style="margin-top:0px;margin-bottom:0px;">
                             <li><a href="#"><i class="icon-chevron-down"></i>
-                                    <span style="padding-left:10px;" class="currentdeptname"><?php echo (Yii::app()->user->getState('current_departement_name')); ?></span>
+                                    <span style="padding-left:10px;" class="currentdeptname">
+                                        <?php echo (Yii::app()->user->getState('current_departement_name')); ?>
+
+                                    </span>
                                 </a>
                                 <div style="max-height:100px;position: relative;">
                                     <ul>
@@ -60,15 +60,15 @@ Yii::app()->clientscript
                                                       // Set up any pre-sending stuff like initializing progress indicators
                                                       }", */
                                                     'success' => "function( data )
-															{
-															  $('.currentdeptname').html(data);
-															}",
+                                                        {
+                                                          $('.currentdeptname').html(data);
+                                                        }",
                                                         //'data' => array( 'val1' => '1', 'val2' => '2' )
                                                         )
                                                 );
                                                 ?>
                                             </li>
-                                            <?php } ?>
+                                        <?php } ?>
                                         <li><Div style="border-top:1px solid #fff;"><a href="<?php echo Yii::app()->createUrl('masters/departement/create'); ?>">Buat Departement Baru</a></li>
                                     </ul>
                                 </div>
@@ -85,47 +85,47 @@ Yii::app()->clientscript
         </div><!-- /navbar -->
         <div id="sidebar">
             <ul class="menu-sidebar">
-<?php if (Yii::app()->user->getIsSuperAdmin()) { ?>
+                <?php if (Yii::app()->user->getIsSuperAdmin()) { ?>
                     <li>
-                        <a href="<?php echo Yii::app()->createUrl('masters') ?>"
-    <?php echo ($this->id == 'default' ? 'class="active"' : '') ?>>
+                        <a <?php echo ($this->menuactive=='master' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters') ?>"
+                           <?php echo ($this->id == 'default' ? 'class="active"' : '') ?>>
                             <i class="icon-home"></i> <span>Master</span>
                         </a>
                     </li>
                     <!--<li><a href="<?php echo Yii::app()->createUrl('masters/anggota') ?>" ><i class="icon-group"></i> <span>Anggota Admin</span></a></li>-->
                     <li>
-                        <a href="<?php echo Yii::app()->createUrl('masters/masterasesor') ?>" >
+                        <a <?php echo ($this->menuactive=='asesor' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters/masterasesor') ?>" >
                             <i class="icon-group"></i> <span>Asesor</span>
                         </a>
                     </li>
                     <li>
-                        <a href="<?php echo Yii::app()->createUrl('masters/strukturorganisasi') ?>" >
+                        <a <?php echo ($this->menuactive=='strukturorganisasi' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters/strukturorganisasi') ?>" >
                             <i class="icon-group"></i> <span>Struktur Organisasi</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="<?php echo Yii::app()->createUrl('masters/pegawai') ?>" >
+                    <li >
+                        <a <?php echo ($this->menuactive=='pegawai' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters/pegawai') ?>" >
                             <i class="icon-group"></i> <span>Pegawai</span>
                         </a>
                     </li>
                     <li>
-                        <a href="<?php echo Yii::app()->createUrl('masters/peserta') ?>" >
+                        <a <?php echo ($this->menuactive=='peserta' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters/peserta') ?>" >
                             <i class="icon-group"></i> <span>Peserta</span>
                         </a>
                     </li>
                     <li>
-                        <a href="<?php echo Yii::app()->createUrl('masters/peserta/idp') ?>" >
+                        <a <?php echo ($this->menuactive=='form_idp' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters/peserta/idp') ?>" >
                             <i class="icon-group"></i> <span>Form IDP</span>
                         </a>
                     </li>
                     <li>
-                        <a href="<?php echo Yii::app()->createUrl('masters/peserta/rekapitulasi') ?>" >
+                        <a <?php echo ($this->menuactive=='laporan' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters/peserta/rekapitulasi') ?>" >
                             <i class="icon-group"></i> <span>Laporan</span>
                         </a>
                     </li>
 
 
-<?php } ?>
+                <?php } ?>
 
                 <?php if (Yii::app()->user->getIsAuthor()) { ?>
                     <li>
@@ -135,31 +135,31 @@ Yii::app()->clientscript
                     </li>
 
                     <li><a href="<?php echo Yii::app()->createUrl('masters/peserta/asesor') ?>" ><i class="icon-group"></i> <span>Peserta</span></a></li>
-                    
-<?php } ?>
+
+                <?php } ?>
                 <?php
                 //print_r(Yii::app()->user->getUserPeserta());
                 ?>
 
                 <?php if (Yii::app()->user->getIsMember()) { ?>
-                    <li><a href="<?php echo Yii::app()->createUrl('masters/peserta/view/id/'.Yii::app()->user->getUserPeserta()->peserta_id)?>" >
-                        <i class="icon-group"></i> <span>Profil</span></a>
+                    <li><a href="<?php echo Yii::app()->createUrl('masters/peserta/view/id/' . Yii::app()->user->getUserPeserta()->peserta_id) ?>" >
+                            <i class="icon-group"></i> <span>Profil</span></a>
                     </li>
 
-                    <li><a href="<?php echo Yii::app()->createUrl('penilaian/laporan/preview/id/'.Yii::app()->user->getUserPeserta()->peserta_id)?>" >
-                        <i class="icon-group"></i> <span>Penilaian SOFT</span></a>
+                    <li><a href="<?php echo Yii::app()->createUrl('penilaian/laporan/preview/id/' . Yii::app()->user->getUserPeserta()->peserta_id) ?>" >
+                            <i class="icon-group"></i> <span>Penilaian SOFT</span></a>
                     </li>
-                    <li><a href="<?php echo Yii::app()->createUrl('penilaian/laporan/previewhard/id/'.Yii::app()->user->getUserPeserta()->peserta_id)?>" >
-                        <i class="icon-group"></i> <span>Penilaian HARD</span></a>
+                    <li><a href="<?php echo Yii::app()->createUrl('penilaian/laporan/previewhard/id/' . Yii::app()->user->getUserPeserta()->peserta_id) ?>" >
+                            <i class="icon-group"></i> <span>Penilaian HARD</span></a>
                     </li>
 
-                    <li><a href="<?php echo Yii::app()->createUrl('penilaian/idp/index/id/'.Yii::app()->user->getUserPeserta()->peserta_id)?>" >
-                        <i class="icon-group"></i> <span>IDP SOFT</span></a>
+                    <li><a href="<?php echo Yii::app()->createUrl('penilaian/idp/index/id/' . Yii::app()->user->getUserPeserta()->peserta_id) ?>" >
+                            <i class="icon-group"></i> <span>IDP SOFT</span></a>
                     </li>
-                    <li><a href="<?php echo Yii::app()->createUrl('penilaian/idp/sethard/id/'.Yii::app()->user->getUserPeserta()->peserta_id)?>" >
-                        <i class="icon-group"></i> <span>IDP HARD</span></a>
+                    <li><a href="<?php echo Yii::app()->createUrl('penilaian/idp/sethard/id/' . Yii::app()->user->getUserPeserta()->peserta_id) ?>" >
+                            <i class="icon-group"></i> <span>IDP HARD</span></a>
                     </li>
-<?php } ?>
+                <?php } ?>
                 <?php /* <li><a href="forms.html"><i class="icon-edit"></i> <span>Forms</span></a></li>
                   <li><a href="widgets.html"><i class="icon-briefcase"></i> <span>Others</span></a></li>
                   <li><a href="error_404.html"><i class="icon-warning-sign"></i> <span>Errors</span></a></li>
@@ -170,7 +170,7 @@ Yii::app()->clientscript
 
         </div>
         <div id="maincontainer">
-<?php echo $content ?>
+            <?php echo $content ?>
         </div>
 
 

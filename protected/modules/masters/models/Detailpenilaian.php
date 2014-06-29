@@ -111,15 +111,23 @@ class Detailpenilaian extends CActiveRecord
     
     $return = array();
     if ( !empty($result) ) {
+        
         foreach ((array) $result as $value){
+           // print_r($value);
           $return[$value->jeniskompetensi_id][$value->kompetensi_id]['nilai'] = $value->nilai;
+          
           $return[$value->jeniskompetensi_id][$value->kompetensi_id]['nilai_default'] = $value->nilai_default;
+          
           $return[$value->jeniskompetensi_id][$value->kompetensi_id]['nilai_akhir'] = $value->nilai_akhir;
+          
           if ( $modelNilai->type_competence == Masterskj::SOFT_COMPETENCE )
             $return[$value->jeniskompetensi_id][$value->kompetensi_id]['title'] = $value->komp->name;
+          
           if ( $modelNilai->type_competence == Masterskj::HARD_COMPETENCE )
-            $return[$value->jeniskompetensi_id][$value->kompetensi_id]['title'] = $value->komphard->name;
+            $return[$value->jeniskompetensi_id][$value->kompetensi_id]['title'] = (empty($value->komphard->name) ? '' : $value->komphard->name);
+          
         }
+        
     } else {
         if ( $type == Masterskj::SOFT_COMPETENCE ){
             $kompetensi = Kompetensi::model()->findAll("skj_id = '{$modelNilai->skj_id}'");
@@ -140,7 +148,7 @@ class Detailpenilaian extends CActiveRecord
         }
     }
     //print_r($return);
-    //die;
+    
 		return $return;
 	}
 }

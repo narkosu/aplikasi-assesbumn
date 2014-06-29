@@ -22,14 +22,14 @@ $this->menu=array(
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
-		'id_departemen',
+		'departement.name',
 		'nip',
 		'nama',
-		'jabatan',
+		'jabatan.jabatan_name',
 		'pendidikan',
 		'tempat_lahir',
 		'tgl_lahir',
-		'tempat_tes',
-		'tgl_tes',
+		//'tempat_tes',
+		//'tgl_tes',
 	),
 )); ?>
