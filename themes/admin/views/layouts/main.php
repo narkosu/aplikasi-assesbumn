@@ -87,39 +87,39 @@ Yii::app()->clientscript
             <ul class="menu-sidebar">
                 <?php if (Yii::app()->user->getIsSuperAdmin()) { ?>
                     <li>
-                        <a <?php echo ($this->menuactive=='master' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters') ?>"
+                        <a <?php //// echo ($this->menuactive=='master' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters') ?>"
                            <?php echo ($this->id == 'default' ? 'class="active"' : '') ?>>
                             <i class="icon-home"></i> <span>Master</span>
                         </a>
                     </li>
                     <!--<li><a href="<?php echo Yii::app()->createUrl('masters/anggota') ?>" ><i class="icon-group"></i> <span>Anggota Admin</span></a></li>-->
                     <li>
-                        <a <?php echo ($this->menuactive=='asesor' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters/masterasesor') ?>" >
+                        <a <?php // // echo ($this->menuactive=='asesor' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters/masterasesor') ?>" >
                             <i class="icon-group"></i> <span>Asesor</span>
                         </a>
                     </li>
                     <li>
-                        <a <?php echo ($this->menuactive=='strukturorganisasi' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters/strukturorganisasi') ?>" >
+                        <a <?php // echo ($this->menuactive=='strukturorganisasi' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters/strukturorganisasi') ?>" >
                             <i class="icon-group"></i> <span>Struktur Organisasi</span>
                         </a>
                     </li>
                     <li >
-                        <a <?php echo ($this->menuactive=='pegawai' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters/pegawai') ?>" >
+                        <a <?php // echo ($this->menuactive=='pegawai' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters/pegawai') ?>" >
                             <i class="icon-group"></i> <span>Pegawai</span>
                         </a>
                     </li>
                     <li>
-                        <a <?php echo ($this->menuactive=='peserta' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters/peserta') ?>" >
+                        <a <?php // echo ($this->menuactive=='peserta' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters/peserta') ?>" >
                             <i class="icon-group"></i> <span>Peserta</span>
                         </a>
                     </li>
                     <li>
-                        <a <?php echo ($this->menuactive=='form_idp' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters/peserta/idp') ?>" >
+                        <a <?php // echo ($this->menuactive=='form_idp' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters/peserta/idp') ?>" >
                             <i class="icon-group"></i> <span>Form IDP</span>
                         </a>
                     </li>
                     <li>
-                        <a <?php echo ($this->menuactive=='laporan' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters/peserta/rekapitulasi') ?>" >
+                        <a <?php // echo ($this->menuactive=='laporan' ? 'class="active"':'')?> href="<?php echo Yii::app()->createUrl('masters/peserta/rekapitulasi') ?>" >
                             <i class="icon-group"></i> <span>Laporan</span>
                         </a>
                     </li>

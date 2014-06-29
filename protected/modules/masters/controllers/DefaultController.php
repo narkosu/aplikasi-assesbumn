@@ -3,7 +3,7 @@
 class DefaultController extends Controller
 {
 	public $layout = '//layouts/main';
-	
+	public $menuactive = '';
 	public function filters()
 	{
 		return array(

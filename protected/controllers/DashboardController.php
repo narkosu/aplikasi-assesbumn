@@ -3,6 +3,7 @@
 class DashboardController extends Controller
 {
 	public $layout='column1';
+	public $menuactive = '';
 
 	 /* @return array action filters
 	 */
