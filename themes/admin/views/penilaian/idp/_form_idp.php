@@ -88,6 +88,7 @@ $countJP = count($jenisPengembangan);
   $form = $this->beginWidget('CActiveForm', array(
       'id' => 'idp-form',
       'enableAjaxValidation' => false,
+      'htmlOptions'=>array('class'=>'stdform stdform2', 'enctype'=>'multipart/form-data')
   ));
   ?>
   <input type="hidden" id="departement_id" name="departement_id" value="<?php echo $penilaian->departement_id ?>">
@@ -125,7 +126,7 @@ $countJP = count($jenisPengembangan);
                 
             ),
             'htmlOptions' => array(
-                'style' => 'height:20px;width:50px;',
+                'style' => 'height:20px;width:100px;',
                 
             ),
         ));
@@ -140,7 +141,7 @@ $countJP = count($jenisPengembangan);
                 'dateFormat'=>'dd-mm-yy'
             ),
             'htmlOptions' => array(
-                'style' => 'height:20px;width:50px;',
+                'style' => 'height:20px;width:100px;',
                 
             ),
         ));
@@ -164,7 +165,11 @@ $countJP = count($jenisPengembangan);
       ?>
       <?php
       foreach ((array) $kompetensis as $kompetensiId => $kompetensi) {
-        $activityInterface .= '<tr style="display:none;" id="subinterface_' . $kompetensiId . '" class="activity_' . $kompetensiId . '"><td colspan="5"><b>' . $kompetensi . '</b></td></tr>';
+        $activityInterface .=   '<tr style="display:none;" id="subinterface_' . $kompetensiId . '" class="activity_' . $kompetensiId . '">'.
+                                '<td colspan="5"><b>' . 
+                                $kompetensi . 
+                                '</b></td>'.
+                                '</tr>';
         //$sub_activityInterface =  '<tr style="display:none;" id="interface_'.$kompetensiId.'" class="activity_'.$kompetensiId.'"><td colspan="5"></td></tr>';
         $getLevel = Assessment::model()->levelPengembangan($penilaian->id, $groupid, $kompetensiId);
         ?>
@@ -258,7 +263,7 @@ $countJP = count($jenisPengembangan);
 
   
     <div class="rowrecord buttons">
-    <?php echo CHtml::Button($penilaian->isNewRecord ? 'Create' : 'Save',array('id'=>'saveAll')); ?>
+    <?php echo CHtml::submitButton($penilaian->isNewRecord ? 'Create' : 'Save',array('id'=>'saveAll')); ?>
     </div>
   
   <?php $this->endWidget(); ?>
@@ -298,9 +303,10 @@ $countJP = count($jenisPengembangan);
         'success' : function(res){
             if (res.output){
               $("#timeframe_"+idxName).val(res.timeframe);
-              $("#bukti_"+idxName).val(res.bukti);
+              $("#filebukti_"+idxName).html(res.bukti);
               $("#tujuan_"+idxName).find('option[value="'+res.tujuan+'"]').attr('selected','selected');
               $("#approve_date_"+idxName).val(res.approve_date);
+              $("#aproved_by_"+idxName).html(res.approve_by);
               $("#aktifitas_"+idxName).val(res.aktifitas);
               
               if ( res.aktifitas != '')
@@ -310,6 +316,8 @@ $countJP = count($jenisPengembangan);
               }else{
                 $("#status_"+idxName).removeAttr('checked');
               }
+              //console.log("#timeframe_"+idxName);
+             // $("#timeframe_"+idxName).datepicker({'showAnim':'fold','dateFormat':'dd-mm-yy'});
             }
               
               
@@ -351,7 +359,7 @@ $countJP = count($jenisPengembangan);
     });
     
     $("#saveAll").click(function(){
-      var $data = $("#idp-form").serialize();
+      /*var $data = $("#idp-form").serialize();
     $.ajax({'type' : 'post',
         'url': '<?php echo Yii::app()->createUrl('penilaian/idp/save')?>',
         'dataType' : 'json',
@@ -360,7 +368,7 @@ $countJP = count($jenisPengembangan);
             
         },
        'data':$data
-      });
+      });*/
     });
     
     <?php

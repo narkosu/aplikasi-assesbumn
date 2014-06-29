@@ -18,6 +18,7 @@ class IdpController extends Controller {
                                 'loadjenispengembangan', 
                                 'LoadjenispengembanganPreview',
                                 'download',
+                                'downloadbukti',
                                 'save'),
                 'users' => array('@'),
             ),
@@ -31,8 +32,156 @@ class IdpController extends Controller {
         );
     }
 
+    
+    public function SaveMe() {
+        if (Yii::app()->request->isPostRequest) {
+           //print_r($_POST);
+           //print_r($_FILES);
+           //die;
+            list($ps_day, $ps_month, $ps_year) = explode('-', $_POST['periode_start']);
+            list($pe_day, $pe_month, $pe_year) = explode('-', $_POST['periode_end']);
+
+            $periode_start = $ps_year . '-' . $ps_month . '-' . $ps_day;
+            $periode_end = $pe_year . '-' . $pe_month . '-' . $pe_day;
+            /*
+             * Check idp is new ?
+             */
+            $idp = Idp::model()->find('departement_id = :dp 
+                                AND peserta_id = :ptid 
+                                AND penilaian_id = :pid', array(':dp' => $_POST['departement_id'],
+                ':ptid' => $_POST['peserta'],
+                ':pid' => $_POST['penilaian_id'])
+            );
+
+            if (empty($idp)) {
+                $idp = new Idp;
+            } else {
+                //echo 'lama';
+            }
+            
+            $idp->departement_id = $_POST['departement_id'];
+            $idp->peserta_id    = $_POST['peserta'];
+            $idp->penilaian_id  = $_POST['penilaian_id'];
+            $idp->jabatan       = $_POST['Idp']['jabatan'];
+            $idp->unit_kerja    = $_POST['Idp']['unit_kerja'];
+            $idp->atasan        = $_POST['Idp']['atasan'];
+            $idp->periode_start = $periode_start;
+            $idp->periode_end   = $periode_end;
+            
+            if ($idp->save()) {
+                //DetailIdp::model()->deleteAll("idp_id = '" . $idp->id . "'");
+                $priority = $_POST['PriorityIdp']['jenispengembangan_id'];
+                foreach ((array) $priority as $indexkomptensi => $priorityChecked) {
+                    
+                    if (!empty($priorityChecked)) {
+                        list($kompetensi_id, $jenispengembangan_id, $level, $detaillevel) = explode('_', $indexkomptensi);
+                        $detailIdp = DetailIdp::model()->find('idp_id = :idp 
+                                             AND departement_id = :dip
+                                             AND kompetensi_id = :kid
+                                             AND jenispengembangan_id = :jid
+                                             AND level_sp_id = :lid
+                                             AND leveldetail_sp_id = :ldid', array(':idp' => $idp->id,
+                            ':dip' => $idp->departement_id,
+                            ':kid' => $kompetensi_id,
+                            ':jid' => $jenispengembangan_id,
+                            ':lid' => $level,
+                            ':ldid' => $detaillevel,
+                        ));
+                        if (empty($detailIdp)) {
+                            $detailIdp = new DetailIdp;
+                            $detailIdp->idp_id = $idp->id;
+                        } else {
+                            $filebuktiold = $detailIdp->bukti;
+                        }
+                        
+                        $aktifitas = ( empty($_POST['aktifitas'][$indexkomptensi]) ? '' : $_POST['aktifitas'][$indexkomptensi]);
+                        $timeframe = ( empty($_POST['timeframe'][$indexkomptensi]) ? '' : $_POST['timeframe'][$indexkomptensi]);
+                        $tujuan = ( empty($_POST['tujuan'][$indexkomptensi]) ? '' : $_POST['tujuan'][$indexkomptensi]);
+                        $bukti = ( empty($_POST['bukti'][$indexkomptensi]) ? '' : $_POST['bukti'][$indexkomptensi]);
+                        $approve_date = ( empty($_POST['approve_date'][$indexkomptensi]) ? '' : $_POST['approve_date'][$indexkomptensi]);
+                        $status = ( empty($_POST['status'][$indexkomptensi]) ? '' : $_POST['status'][$indexkomptensi]);
+                        
+                        $detailIdp->departement_id = $idp->departement_id;
+                        
+                        $detailIdp->kompetensi_id = $kompetensi_id;
+                        
+                        $detailIdp->jenispengembangan_id = $jenispengembangan_id;
+                        
+                        $detailIdp->level_sp_id = $level;
+                        
+                        $detailIdp->leveldetail_sp_id = $detaillevel;
+                        $detailIdp->aktifitas = $aktifitas ;
+                        
+                        $detailIdp->timeframe = $this->convertDate($timeframe);
+                        
+                        $detailIdp->tujuan = $tujuan;
+                        
+                        $detailIdp->approved_by = Yii::app()->user->id;
+                        
+                        $folder = Yii::getPathOfAlias('webroot')."/files";  
+                        $newFile = false;
+                        if ( !empty($_FILES['DetailIdp']['name']['filebukti'][$indexkomptensi]) ){
+                            
+                            $time = time();
+                            $detailIdp->bukti = CUploadedFile::getInstance($detailIdp,'filebukti['.$indexkomptensi.']');
+                            
+                            
+                            $newfilename = $time.'_'.$indexkomptensi.'.'.$detailIdp->bukti->getExtensionName();
+                            $extension = $detailIdp->bukti->getExtensionName();
+                            
+                            $detailIdp->bukti->saveAs( $folder . '/' . $newfilename ); 
+                            $detailIdp->bukti = $newfilename;
+                            $newFile = true;
+                           
+                            
+                        }
+                        //$detailIdp->bukti = $bukti;
+                        $detailIdp->approve_date = $this->convertDate($approve_date);
+                        $detailIdp->status = $status;
+                        
+                        if ( $detailIdp->save() ) {
+                             if (!(empty($filebuktiold)) && $newFile){
+                                 @unlink($folder.'/'.$filebuktiold);
+                             }
+                            
+                        }else{
+                            
+                        }
+                    }
+                    
+                }
+                
+                Yii::app()->user->setFlash('idp_success','Data IDP sudah tersimpan.');
+                $return['status'] = 'success';
+                echo json_encode($return);
+            } else {
+                $return['status'] = 'error';
+                $return['error'] = $idp->getErrors();
+                echo json_encode($return);
+                
+            }
+        }
+    }
+    
+    
+    public function actionDownloadBukti(){
+
+        //$model = new DetailIdp; 
+        $name	= $_GET['file'];	
+        $upload_path = Yii::getPathOfAlias('webroot')."/files";  
+
+        if( file_exists( $upload_path.'/'.$name ) ){
+            Yii::app()->getRequest()->sendFile( $name , file_get_contents( $upload_path.'/'.$name ) );
+        }
+        else{
+            $this->render('download404');
+        }	
+
+    } 
+
     public function actionSave() {
         if (Yii::app()->request->isPostRequest) {
+           
             list($ps_day, $ps_month, $ps_year) = explode('-', $_POST['periode_start']);
             list($pe_day, $pe_month, $pe_year) = explode('-', $_POST['periode_end']);
 
@@ -89,8 +238,8 @@ class IdpController extends Controller {
                         
                         $aktifitas = ( empty($_POST['aktifitas'][$indexkomptensi]) ? '' : $_POST['aktifitas'][$indexkomptensi]);
                         $timeframe = ( empty($_POST['timeframe'][$indexkomptensi]) ? '' : $_POST['timeframe'][$indexkomptensi]);
-                        $tujuan = ( empty($_POST['tujuan'][$indexkomptensi]) ? '' : $_POST['tujuan'][$indexkomptensi]);
-                        $bukti = ( empty($_POST['bukti'][$indexkomptensi]) ? '' : $_POST['bukti'][$indexkomptensi]);
+                        $tujuan     = ( empty($_POST['tujuan'][$indexkomptensi]) ? '' : $_POST['tujuan'][$indexkomptensi]);
+                        $bukti      = ( empty($_POST['bukti'][$indexkomptensi]) ? '' : $_POST['bukti'][$indexkomptensi]);
                         $approve_date = ( empty($_POST['approve_date'][$indexkomptensi]) ? '' : $_POST['approve_date'][$indexkomptensi]);
                         $status = ( empty($_POST['status'][$indexkomptensi]) ? '' : $_POST['status'][$indexkomptensi]);
                         
@@ -117,8 +266,8 @@ class IdpController extends Controller {
                             
                         }
                     }
-                    
                 }
+                
                 Yii::app()->user->setFlash('idp_success','Data IDP sudah tersimpan.');
                 $return['status'] = 'success';
                 echo json_encode($return);
@@ -184,6 +333,11 @@ class IdpController extends Controller {
     }
 
     public function actionSethard($id) {
+        
+        
+        if (!empty($_POST)){
+            $this->SaveMe();
+        }
         
         $params['competency'] = 2;
         $params['id'] = $id;
@@ -306,9 +460,6 @@ class IdpController extends Controller {
                     $no = 1;
                     if ( !empty($spdet->detail))
                     foreach ( $spdet->detail as $splevelDetil) {
-                        // echo $splevelDetil->id;
-                        //echo $splevelDetil;
-                        //echo ($no++).'<br>';
                         
                         $splevelDetil->keterangan = ( empty ($splevelDetil->keterangan) ? '' : $splevelDetil->keterangan );
                         $splevelDetil->id = ( empty ($splevelDetil->id) ? '' : $splevelDetil->id );
@@ -318,28 +469,31 @@ class IdpController extends Controller {
                         $detailKeterangan   = $splevelDetil->keterangan;
                         
                         $tujuan = '<select id="tujuan_' . $indexName . '" style="width:100px;" name="tujuan[' . $indexName . ']">
-                      <option value=""></option>
-                      <option value="1">Memperbaiki Kerja</option>
-                      <option value="2">Penugasan Khusus</option>
-                      <option value="3">Pengembangan Karir</option>
-                      <option value="4">Perubahan Jabatan</option>
-                    </select>';
+                                    <option value=""></option>
+                                    <option value="1">Memperbaiki Kerja</option>
+                                    <option value="2">Penugasan Khusus</option>
+                                    <option value="3">Pengembangan Karir</option>
+                                    <option value="4">Perubahan Jabatan</option>
+                                  </select>';
 
-                        $datePicker = '<input type="input" name="timeframe[' . $indexName . ']" style="width:50px;" class="hasDatepicker" id="timeframe_' . $indexName . '">';
-                        $dateApprove = '<input type="input" name="approve_date[' . $indexName . ']" style="width:50px;" class="hasDatepicker" id="approve_date_' . $indexName . '">';
-                        $bukti = '<textarea cols="10" rows="2" name="bukti[' . $indexName . ']" style="width:50px;"  id="bukti_' . $indexName . '"></textarea>';
-                        $statusApprove = '<input type="checkbox" name="status[' . $indexName . ']" id="status_' . $indexName . '" value="1">';
-                        $grouping_form = "form_" . $indexName;
+                        $datePicker     = '<input type="input" name="timeframe[' . $indexName . ']" style="width:100px;" class="hasDatepicker" id="timeframe_' . $indexName . '">';
+                        $dateApprove    = '<input type="input" name="approve_date[' . $indexName . ']" style="width:100px;" class="hasDatepicker" id="approve_date_' . $indexName . '">';
+                        $bukti          = '<input type="file" name="DetailIdp[filebukti][' . $indexName . ']" >';
+                        $bukti          .= '<br>File : <span id="filebukti_' . $indexName . '"></span>';
+                        $statusApprove  = '<input type="checkbox" name="status[' . $indexName . ']" id="status_' . $indexName . '" value="1">';
+                        $grouping_form  = "form_" . $indexName;
 
                         $subactivityInterface .= '<tr class="' . $grouping_form . '" style="display:none;">' .
                                 '<td>' .
                                 '<div style="padding-left:35px;">' .
                                 '<div id="keterangan_aktifitas_'.$indexName.'" original="'.$detailKeterangan .'">'.$detailKeterangan .'</div>'. 
                                 '<textarea style="width:90%;display:none;" name="aktifitas['.$indexName.']" id="aktifitas_'.$indexName.'"></textarea>'.
-                                '<br><div style="float:right;">'.
-                                '<span class="button aktifitas_edit" relindex="'.$indexName.'">Edit</span>'.
-                                '<span class="button aktifitas_ubah" relindex="'.$indexName.'" style="display:none;">Ubah</span>'.
-                                '<span class="button aktifitas_cancel" relindex="'.$indexName.'"  style="display:none;">Batal</span>'.
+                                '<br>
+                                 <div style="float:right;">'.
+                                '<span>Approved By <span id="aproved_by_'.$indexName.'">'.Yii::app()->user->name.'</span></span>'.
+                                //'<span class="button aktifitas_edit" relindex="'.$indexName.'">Edit</span>'.
+                                //'<span class="button aktifitas_ubah" relindex="'.$indexName.'" style="display:none;">Ubah</span>'.
+                                //'<span class="button aktifitas_cancel" relindex="'.$indexName.'"  style="display:none;">Batal</span>'.
                                 '</div><div style="clear:both;"></div>'.
                                 '</div>'.
                                 '</td>' .
@@ -447,7 +601,7 @@ class IdpController extends Controller {
                 </select><div id="texttujuan_'.$indexName.'"></div>';
                     $datePicker = '<div id="timeframe_' . $indexName . '"></div>';
                     $dateApprove = '<div id="approve_date_' . $indexName . '"></div>';
-                    $bukti = '<div id="bukti_' . $indexName . '"></div>';
+                    $bukti = '<div id="filebukti_' . $indexName . '"></div>';
                     $statusApprove = '<div id="status_' . $indexName . '"></div>';
                     $grouping_form = "form_" . $indexName;
 
@@ -501,8 +655,9 @@ class IdpController extends Controller {
             $return['output'] = true;
             $return['timeframe'] = $this->deconvertDate($idpDetail->timeframe);
             $return['tujuan'] = $idpDetail->tujuan;
-            $return['bukti'] = $idpDetail->bukti;
+            $return['bukti'] = (empty($idpDetail->bukti) ? '' : '<a href="'.Yii::app()->createUrl('penilaian/idp/downloadbukti').'?file='.$idpDetail->bukti.'">'.$idpDetail->bukti.'</a>');
             $return['approve_date'] = $this->deconvertDate($idpDetail->approve_date);
+            $return['approve_by'] = $idpDetail->user->username;
             $return['status'] = $idpDetail->status;
             $return['aktifitas'] = $idpDetail->aktifitas;
         } else {

@@ -43,8 +43,9 @@ class DetailIdp extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('idp_id, kompetensi_id, level_sp_id, leveldetail_sp_id, tujuan, status', 'numerical', 'integerOnly'=>true),
-			array('timeframe, bukti, approve_date', 'safe'),
+			array('idp_id, approved_by, kompetensi_id, level_sp_id, leveldetail_sp_id, tujuan, status', 'numerical', 'integerOnly'=>true),
+			array('bukti', 'file', 'allowEmpty' => true, 'types'=>'pdf, xls, xlsx, doc, docx, jpg, jpeg, png'),
+      array('timeframe, approved_by, approve_date', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, idp_id, kompetensi_id, level_sp_id, leveldetail_sp_id, timeframe, tujuan, bukti, status, approve_date', 'safe', 'on'=>'search'),
@@ -62,6 +63,7 @@ class DetailIdp extends CActiveRecord
         'jenispengembangan'=>array(self::BELONGS_TO,'Jenispengembangan','jenispengembangan_id'),
         'leveldetail'=>array(self::BELONGS_TO,'LevelSaranpengembanganDetail','leveldetail_sp_id'),
         'leveldetailhard'=>array(self::BELONGS_TO,'LevelSaranpengembanganDetailHard','leveldetail_sp_id'),
+        'user'=>array(self::BELONGS_TO,'User','approved_by'),
 		);
 	}
 
