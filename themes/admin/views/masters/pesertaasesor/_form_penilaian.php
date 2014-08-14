@@ -161,11 +161,14 @@ $depid = $this->module->current_departement_id;
 	<div id="headerkesimpulan" class="header_sub_title">REKOMENDASI</div>
 	<div style="clear:both;"></div>
 	<?php
+  
 	$rekomendasi = Assessment::model()->rekomendasi($depid,$model->persentase_pemenuhan);
-	$model->matrix = Assessment::model()->matrix($depid,$rekomendasi['result']['id'],$model->data_kinerja);
-	//print_r($rekomendasi);
 	
-	$result[$rekomendasi['result']['id']] =  'background:#3D5D8A';
+  
+  $model->matrix = Assessment::model()->matrix($depid, (empty($rekomendasi['result']['id']) ? 0 : $rekomendasi['result']['id']), $model->data_kinerja);
+	
+	
+	$result[(empty($rekomendasi['result']['id']) ? 0 : $rekomendasi['result']['id'])] =  'background:#3D5D8A';
   $result['P'] = ( empty($result['P'])?'':$result['P']);
   $result['KP'] = ( empty($result['KP'])?'':$result['KP']);
   $result['PC'] = ( empty($result['PC'])?'':$result['PC']);

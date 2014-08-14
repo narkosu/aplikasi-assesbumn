@@ -35,9 +35,7 @@ class IdpController extends Controller {
     
     public function SaveMe() {
         if (Yii::app()->request->isPostRequest) {
-           //print_r($_POST);
-           //print_r($_FILES);
-           //die;
+           
             list($ps_day, $ps_month, $ps_year) = explode('-', $_POST['periode_start']);
             list($pe_day, $pe_month, $pe_year) = explode('-', $_POST['periode_end']);
 
@@ -490,7 +488,7 @@ class IdpController extends Controller {
                                 '<textarea style="width:90%;display:none;" name="aktifitas['.$indexName.']" id="aktifitas_'.$indexName.'"></textarea>'.
                                 '<br>
                                  <div style="float:right;">'.
-                                '<span>Approved By <span id="aproved_by_'.$indexName.'">'.Yii::app()->user->name.'</span></span>'.
+                                '<span>Approved By <span id="aproved_by_'.$indexName.'"> .... </span></span>'.
                                 //'<span class="button aktifitas_edit" relindex="'.$indexName.'">Edit</span>'.
                                 //'<span class="button aktifitas_ubah" relindex="'.$indexName.'" style="display:none;">Ubah</span>'.
                                 //'<span class="button aktifitas_cancel" relindex="'.$indexName.'"  style="display:none;">Batal</span>'.
@@ -695,11 +693,13 @@ class IdpController extends Controller {
         $kuat = 0;
         $lemah = 0;
         $output = array();
-        $output['weak'] = array();
-        $output['strong'] = array();
+        $output['weak'] = '';
+        $output['strong'] = '';
         $output['weakarray'] = array();
         $output['strongarray'] = array();
+        
         foreach ((array) $detailNilai as $jk => $gkomp) {
+            
             foreach ((array) $gkomp as $kompid => $values) {
                 if ($values['nilai_akhir'] < 0) {
                     $output['weak'] .= '<li>' . $values['title'] . '</li>';
