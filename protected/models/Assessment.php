@@ -77,6 +77,7 @@ class Assessment extends CModel {
   }
 
   public function rekomendasi($iddepartement = '', $nilaiakhir = '') {
+    $rekomendasi = array();  
     if (empty($iddepartement))
       return;
     if (empty($nilaiakhir))
@@ -202,7 +203,7 @@ class Assessment extends CModel {
   }
 
   public function levelPengembangan($penilaian_id, $jenkomp_id, $komptensi_id) {
-
+    $output = new stdClass;  
     $result = Detailpenilaian::model()
             ->find('penilaian_id = :pid and 
                             jeniskompetensi_id = :jkid and
