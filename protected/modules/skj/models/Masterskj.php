@@ -44,9 +44,10 @@ class Masterskj extends CActiveRecord
 			array('departement_id,tahun', 'numerical', 'integerOnly'=>true),
 			array('skj_name', 'length', 'max'=>255),
 			array('status', 'length', 'max'=>45),
+			array('tgl_selesai', 'length', 'max'=>45),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, departement_id, skj_name, status', 'safe', 'on'=>'search'),
+			array('id, departement_id, skj_name, status, tgl_selesai', 'safe', 'on'=>'search'),
 		);
 	}
 

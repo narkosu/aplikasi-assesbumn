@@ -223,11 +223,18 @@ class PesertaasesorController extends Controller {
             array(':pid' => $id,
                 ':tc'=>  Masterskj::SOFT_COMPETENCE
                 ));
+    $availableToEDIT = false;
     
     if (isset($loadPenilaian)) {
       $model = $loadPenilaian;
       $detailNilai = Detailpenilaian::model()->kompetensinilaiArray($model);
       $detailUraian = Uraiankompetensi::model()->uraianKompetensiArray($model->id);
+      $expired = strtotime($model->masterskj->tgl_selesai);
+      $now = strtotime(date('Y-m-d'));
+      
+      if ( $expired > $now) 
+          $availableToEDIT = true;
+      
     } else {
       $model = new Penilaian;
     }
@@ -326,7 +333,13 @@ class PesertaasesorController extends Controller {
     }
     
     if (!$model->isNewRecord) {
-      $kompetensiForm = $this->renderFormKompetensi($model->skj_id, $model->itemskj_id, array('nilai' => $detailNilai, 'uraian' => $detailUraian, 'model' => $model));
+      $kompetensiForm = $this->renderFormKompetensi($model->skj_id, $model->itemskj_id, 
+                        array(
+                                'nilai' => $detailNilai, 
+                                'uraian' => $detailUraian, 
+                                'model' => $model,
+                                'availableToEDIT' => $availableToEDIT)
+              );
       //$kompetensiForm['nilai'] = $detailNilai;
       $kompetensiForm['jabatan'] = Jabatan::model()->findByPk($loadPenilaian->itemskj->jabatan_id);
     }
@@ -337,6 +350,7 @@ class PesertaasesorController extends Controller {
     $this->render('formpenilaian', array(
         'peserta' => $loadPeserta,
         'model' => $model,
+        'availableToEDIT' => $availableToEDIT,
         'output' => $kompetensiForm,
         'params' => array()
     ));
@@ -354,8 +368,7 @@ class PesertaasesorController extends Controller {
                 ));
     
     if (isset($loadPenilaian)) {
-      //echo 'ada lo';
-      //echo $loadPenilaian->skj_id.' '.$loadPenilaian->itemskj_id;
+      
       $model = $loadPenilaian;
       $detailNilai = Detailpenilaian::model()->kompetensinilaiArray($model, Masterskj::HARD_COMPETENCE);
       

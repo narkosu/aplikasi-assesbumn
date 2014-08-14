@@ -98,36 +98,7 @@ $depid = $this->module->current_departement_id;
 			</Tr>
 		</table>
 	</div>
-	<?php /*
-  <div id="headertestpotensi" class="header_sub_title">TEST POTENSI</div>
-	<div id="areatestpotensi">
-		<table>
-			<tr>
-				<td style="width:100px;border-bottom:1px solid #000;font-weight:bold;">Test</td>
-				<td style="width:100px;border-bottom:1px solid #000;font-weight:bold;" >Nilai</td>
-				<td style="border-bottom:1px solid #000;font-weight:bold;">Form</td>
-			</tr>
-			<tr>
-				<td>CFIT</td>
-				<td><?php echo $form->textField($model,'CFIT',array('size'=>45,'maxlength'=>45)); ?></td>
-				<td>Form</td>
-			</tr>
-			<tr>
-				<td>GATB</td>
-				<td><?php echo $form->textField($model,'GATB',array('size'=>45,'maxlength'=>45)); ?></td>
-				<td>Form</td>
-			</tr>
-			<tr>
-				<td>PAULI</td>
-				<td><?php echo $form->textField($model,'PAULI',array('size'=>45,'maxlength'=>45)); ?></td>
-				<td>Form</td>
-			</tr>
-		</table>
-		
-	</div>
-   * 
-   */
-  ?>
+	
 	<div id="headerloadKompetensi" class="header_sub_title">PROFIL KOMPETENSI</div>
 	<div id="loadKompetensi">
 		<?php if ( !$model->isNewRecord ) {
@@ -243,10 +214,11 @@ $depid = $this->module->current_departement_id;
 	} ?>
 	</div>
 	<div style="clear:both;"></div>
-	<div class="record buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
-	</div>
-
+  <?php if ( $availableToEDIT ) { ?>
+    <div class="record buttons">
+      <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+    </div>
+  <?php } ?>
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->

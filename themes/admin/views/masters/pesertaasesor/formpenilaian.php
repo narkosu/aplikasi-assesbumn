@@ -31,5 +31,11 @@ $this->menu=array(
 
 <?php 
 
-echo $this->renderPartial('_form_penilaian', array('model'=>$model,'peserta'=>$peserta,'output'=>$output)); ?>
+echo $this->renderPartial('_form_penilaian', 
+        array(  'model'=>$model, 
+                'peserta'=>$peserta, 
+                'output'=>$output,
+                'availableToEDIT' => $availableToEDIT,
+            )
+        ); ?>
 </div>

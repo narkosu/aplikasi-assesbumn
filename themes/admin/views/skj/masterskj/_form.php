@@ -32,6 +32,11 @@
 		<?php echo $form->textField($model,'tahun',array('size'=>45,'maxlength'=>45)); ?>
 		<?php echo $form->error($model,'tahun'); ?>
 	</div>
+  <div class="record">
+		<?php echo $form->labelEx($model,'tgl_selesai'); ?>
+		<?php echo $form->textField($model,'tgl_selesai',array('size'=>45,'maxlength'=>45)); ?>
+		<?php echo $form->error($model,'tgl_selesai'); ?>
+	</div>  
 <div class="record">
 		
 		<?php echo $form->labelEx($model,'type'); ?>

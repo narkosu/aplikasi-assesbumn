@@ -73,6 +73,7 @@ class DefaultController extends Controller
 			$row[] = $iskj->id;//for else
 			$row['departement'] = $iskj->dept->name;//for else
 			$row['type'] = $iskj->getSKJType();//for else
+			$row['tgl_selesai'] = $iskj->tgl_selesai;//for else
 			$output['aaData'][] = $row;
 		}
 		

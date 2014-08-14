@@ -19,7 +19,9 @@
 									  'null',
               array("mDataProp"=> "departement",
                 "sName"=> "Depertement"),
-              'null','null',
+              'null','null', 
+              array("mDataProp"=> "tgl_selesai",
+                "sName"=> "Tgl Berakhir"),
               array("mDataProp"=> "type",
                 "sName"=> "Type"),
 
@@ -51,8 +53,9 @@
 				<th width="100">Departement</th>
 				<th >Nama SKJ</th>
 				<th >Tahun</th>
+				<th width="100">Tanggal Berakhir</th>
 				<th >Type</th>
-				<th width="200">--</th>
+				<th width="210">--</th>
 			</tr>
 		</thead>
 		<tbody>
