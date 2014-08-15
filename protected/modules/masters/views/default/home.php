@@ -107,6 +107,11 @@
         <i class="icon-home"></i><span>SKJ</span>
       </a>
     </li>
+    <li class="one_fifth" style="width:100px;height:100px;">
+      <a href="<?php echo Yii::app()->createUrl('masters/provider')?>">
+        <i class="icon-home"></i><span>Provider</span>
+      </a>
+    </li>
 	</ul>
 	<div style="clear:both;"></div>
 </div>
