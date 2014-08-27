@@ -155,7 +155,17 @@ class Assessment extends CModel {
   }
 
   function rechange($string, $params) {
-    return preg_replace('/([a-z_]+)/e', '$params[$1]', $string);
+   //echo $string;
+   //print_r($params);
+   if (!empty($params)){
+   foreach ( $params as $index => $value){
+       $string = str_replace($index,$value,$string);
+   }
+   return $string;
+   //die;
+    //return preg_replace('/([a-z_]+)/e', '$params[$1]', $string);
+   }
+    
   }
 
   function setAllRekomendasi($departement) {

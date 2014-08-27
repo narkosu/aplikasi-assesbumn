@@ -2,7 +2,7 @@
 
 class DashboardController extends Controller
 {
-	public $layout='column1';
+	public $layout='/layouts/mainadmin';
 	public $menuactive = '';
 
 	 /* @return array action filters
@@ -19,7 +19,8 @@ class DashboardController extends Controller
 	  return array(
 		//only accessable by admins
 		array('allow',
-		  'expression'=>'$user->isSuperAdmin',
+		  
+        'expression'=>'$user->isSuperAdmin || $user->isMember || $user->isAdmin || $user->isAuthor',
 		   //the 'user' var in an accessRule expression is a reference to Yii::app()->user
 		),
 		//deny all other users

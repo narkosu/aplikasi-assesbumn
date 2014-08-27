@@ -95,6 +95,7 @@ class Uraiankompetensi extends CActiveRecord
 	
 	public function uraianKompetensiArray($id){
 		$result = $this->findAll('penilaian_id = :penid',array(':penid'=>$id));
+    $return = array();
 		foreach ($result as $value){
 			$return[$value->jenis_kompetensi] = $value->uraian;
 		}

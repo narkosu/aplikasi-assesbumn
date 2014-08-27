@@ -27,7 +27,8 @@ class User extends CActiveRecord
 			self::LEVEL_AUTHOR => 'Author',
 			self::LEVEL_ADMIN => 'Administrator',
 			self::LEVEL_VIEW => 'Pengawas',
-			self::LEVEL_SUPERADMIN => 'Super Administrator'
+			self::LEVEL_SUPERADMIN => 'Super Administrator',
+			self::LEVEL_MEMBER => 'Anggota'
 		);
 		
 		if( $level === null)

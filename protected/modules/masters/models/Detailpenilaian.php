@@ -106,7 +106,7 @@ class Detailpenilaian extends CActiveRecord
   
   
 	public function kompetensinilaiArray($modelNilai, $type = 1){
-    
+    if ( !empty($modelNilai->id) )
 		$result = $this->findAll('penilaian_id = :penid',array(':penid'=>$modelNilai->id));
     
     $return = array();
@@ -120,15 +120,19 @@ class Detailpenilaian extends CActiveRecord
           
           $return[$value->jeniskompetensi_id][$value->kompetensi_id]['nilai_akhir'] = $value->nilai_akhir;
           
-          if ( $modelNilai->type_competence == Masterskj::SOFT_COMPETENCE )
-            $return[$value->jeniskompetensi_id][$value->kompetensi_id]['title'] = $value->komp->name;
+          if ( $modelNilai->type_competence == Masterskj::SOFT_COMPETENCE ){
+           
+              $return[$value->jeniskompetensi_id][$value->kompetensi_id]['title'] = (empty($value->komp->name) ? '' : $value->komp->name );
+           
+          }
           
-          if ( $modelNilai->type_competence == Masterskj::HARD_COMPETENCE )
+          if ( $modelNilai->type_competence == Masterskj::HARD_COMPETENCE ){
             $return[$value->jeniskompetensi_id][$value->kompetensi_id]['title'] = (empty($value->komphard->name) ? '' : $value->komphard->name);
-          
+          }
         }
         
     } else {
+        
         if ( $type == Masterskj::SOFT_COMPETENCE ){
             $kompetensi = Kompetensi::model()->findAll("skj_id = '{$modelNilai->skj_id}'");
         } else if ( $type == Masterskj::HARD_COMPETENCE ){

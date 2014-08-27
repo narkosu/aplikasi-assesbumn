@@ -357,9 +357,16 @@ class PesertaasesorController extends Controller {
   }
 
   /**
-   * PENILAIAN SOFT
+   * PENILAIAN HARD
    */
   public function actionPenilaianhard($id) {
+    
+    $peserta = Peserta::model()->findByPk($id);  
+    if ( empty($peserta)){
+        $this->render('peserta_empty');
+    }
+    
+    $kompetensiForm = array();
     $hasAccess = Userasesor::model()->hasAccess();
 
     $loadPenilaian = Penilaian::model()->find('peserta_id = :pid AND type_competence = :tc', 
@@ -386,33 +393,36 @@ class PesertaasesorController extends Controller {
     if ($_POST) {
 
       if (isset($loadPenilaian)) {
+          $pform = $_POST['Penilaian'];
+          
         $model = $loadPenilaian;
         $model->skj_id = $_POST['Penilaian']['skj_id'];
         $model->itemskj_id = $_POST['Penilaian']['itemskj_id'];
-        $model->kesimpulan_umum = $_POST['Penilaian']['kesimpulan_umum'];
-        $model->gap_akhir = $_POST['Kompetensiskj_final'];
-        $model->data_kinerja = $_POST['Penilaian']['data_kinerja'];
-        $model->matrix = $_POST['Penilaian']['matrix'];
-        $model->persentase_pemenuhan = $_POST['persentase_kompetensi'];
+        $model->kesimpulan_umum = ( !empty($pform['kesimpulan_umum']) ? $pform['kesimpulan_umum'] : '');
+        $model->gap_akhir = ( !empty($_POST['Kompetensiskj_final']) ? $_POST['Kompetensiskj_final'] : '');
+        $model->data_kinerja = ( !empty($pform['data_kinerja']) ? $pform['data_kinerja'] : '');
+        $model->matrix = ( !empty($pform['matrix']) ? $pform['matrix'] : '');
+        $model->persentase_pemenuhan = ( !empty($_POST['persentase_kompetensi']) ? $_POST['persentase_kompetensi'] : '');
       } else {
+        $pform = $_POST['Penilaian'];  
         $model->departement_id = $this->module->current_departement_id;
-        $model->assessor_id = $hasAccess->assessor_id;
+        //$model->assessor_id = $hasAccess->assessor_id;
         $model->peserta_id = $_POST['peserta_id'];
         $model->skj_id = $_POST['Penilaian']['skj_id'];
         $model->itemskj_id = $_POST['Penilaian']['itemskj_id'];
-        $model->kesimpulan_umum = $_POST['Penilaian']['kesimpulan_umum'];
-        $model->gap_akhir = $_POST['Kompetensiskj_final'];
-        $model->data_kinerja = $_POST['Penilaian']['data_kinerja'];
-        $model->matrix = $_POST['Penilaian']['matrix'];
-        $model->persentase_pemenuhan = $_POST['persentase_kompetensi'];
+        $model->kesimpulan_umum = ( !empty($pform['kesimpulan_umum']) ? $pform['kesimpulan_umum'] : '');
+        $model->gap_akhir = ( !empty($_POST['Kompetensiskj_final']) ? $_POST['Kompetensiskj_final'] : '');
+        $model->data_kinerja = ( !empty($pform['data_kinerja']) ? $pform['data_kinerja'] : '');
+        $model->matrix = ( !empty($pform['matrix']) ? $pform['matrix'] : '');
+        $model->persentase_pemenuhan = ( !empty($_POST['persentase_kompetensi']) ? $_POST['persentase_kompetensi'] : '');
       }
       
       $model->type_competence = Masterskj::HARD_COMPETENCE;
       
       if ($model->save()) {
         //echo $model->persentase_pemenuhan;
-        $komp = $_POST['Kompetensiskj'];
-
+        $komp = (empty($_POST['Kompetensiskj']) ? '' : $_POST['Kompetensiskj']);
+        if ( !empty($komp) )
         foreach ((array) $komp as $jenisKomp => $groupKomptensi) {
 
           foreach ((array) $groupKomptensi as $idKompetensi => $valueKomptensi) {
@@ -464,7 +474,7 @@ class PesertaasesorController extends Controller {
           }
         }
         
-        $detailNilai = Detailpenilaian::model()->kompetensinilaiArray($model->id);
+        $detailNilai = Detailpenilaian::model()->kompetensinilaiArray($model);
         $detailUraian = Uraiankompetensi::model()->uraianKompetensiArray($model->id);
       } else {
         echo 'error';
@@ -487,6 +497,7 @@ class PesertaasesorController extends Controller {
     }
     
     //$kompetensiForm['ringkasan'] = $this->ringkasanProfil($detailNilai);
+    if ( !empty($detailNilai) )
     $kompetensiForm['ringkasan'] = $this->ringkasanProfil($detailNilai);
     
     $this->render('formpenilaian_hard', array(
@@ -539,6 +550,8 @@ class PesertaasesorController extends Controller {
    * Manages all models.
    */
   public function actionLoadkompetensihard() {
+      if (!isset($_POST) ) json_encode(array());
+      
     $peserta = $_POST['peserta_id'];
     //$_POST['penilaian_id'];
     $skjid = $_POST['Penilaian']['skj_id'];
@@ -553,14 +566,21 @@ class PesertaasesorController extends Controller {
         $opt .= '<option value="' . $id . '">' . $caption . '</option>';
       }
     }
+    $output = array();
+    if ( !empty($itemskjid) ) {
+        $penilaian_id = Penilaian::model()->find('peserta_id = :pid and skj_id = :skid and itemskj_id = :itskjid', array(':pid' => $peserta,
+            ':skid' => $skjid,
+            ':itskjid' => $itemskjid,
+                )
+        );
     
-    $penilaian_id = Penilaian::model()->find('peserta_id = :pid and skj_id = :skid and itemskj_id = :itskjid', array(':pid' => $peserta,
-        ':skid' => $skjid,
-        ':itskjid' => $itemskjid,
-            )
-    );
-    $params['nilai'] = $detailNilai = Detailpenilaian::model()->kompetensinilaiArray($penilaian_id->id);
-    $output = $this->renderFormKompetensihard($skjid, $itemskjid, $params);
+        $params = array();
+        if ( !empty($penilaian_id) ) {
+            $params['nilai'] = $detailNilai = Detailpenilaian::model()->kompetensinilaiArray($penilaian_id);
+        }
+        
+        $output = $this->renderFormKompetensihard($skjid, $itemskjid, $params);
+    }
     $output['itemskj'] = $opt;
     //print_r($output);
     echo json_encode($output);
@@ -803,7 +823,7 @@ class PesertaasesorController extends Controller {
     $params['itemkompetensi'] = $modelkompetensisjk;
     $params['skj_id'] = $skjid;
     $params['itemskj_id'] = $itemskjid;
-    
+    //print_r($params);
     switch (isset($params['onview'])) {
       case 'doc':
           
@@ -815,12 +835,12 @@ class PesertaasesorController extends Controller {
         $output['saranpengembangan'] = $this->renderPartial('_cetak_saran_pengembangan', $params, true, true);
         break;
       default:
-
+          
         $output['loadkompetensi'] = $this->renderPartial('_form_penilaian_kompetensi_hard', $params, true, true);
         
         $output['uraianKompetensi'] = $this->renderPartial('_form_penilaian_uraian_kompetensi_hard', $params, true, true);
-        
-        $params['ringkasan'] = $this->ringkasanProfil($params['nilai']);
+        $nilai = (empty($params['nilai']) ? null : $params['nilai']);
+        $params['ringkasan'] = $this->ringkasanProfil($nilai);
         
         $output['ringkasanKompetensi'] = $this->renderPartial('_ringkasan_penilaian_kompetensi_hard', $params, true, true);
         

@@ -2,7 +2,7 @@
 
 class SiteController extends Controller
 {
-	public $layout='column1';
+	public $layout='/layouts/mainlogin';
   public $menuactive = '';
 
 	/**
@@ -79,9 +79,14 @@ class SiteController extends Controller
 			$model->attributes=$_POST['LoginForm'];
 			// validate user input and redirect to the previous page if valid
 			if($model->validate() && $model->login()) {
-           
-           if ( Yii::app()->user->getIsMember() ) {
-                $peserta = Yii::app()->user->getState('userpeserta');
+            $id =  3;
+            $currentDepartement = Departement::model()->findByPk($id);
+            Yii::app()->user->setState('current_departement',null);
+            Yii::app()->user->setState('current_departement_id',$id);
+            Yii::app()->user->setState('current_departement_name',$currentDepartement->name);
+            $peserta = Yii::app()->user->getState('userpeserta'); 
+           if ( Yii::app()->user->getIsMember() && !empty($peserta)) {
+               
                 $this->redirect(array('masters/peserta/view','id'=>$peserta->peserta_id));
            } else {
                 $this->redirect(Yii::app()->user->returnUrl);

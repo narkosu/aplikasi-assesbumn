@@ -125,7 +125,7 @@ class PesertaController extends Controller {
                         $user->attributes = $_POST['User'];
                         $user->salt = 'temp';
                         if ($user->validate()) {
-                            $user->generatePassword($_POST['password']);
+                            $user->generatePassword($_POST['User']['password']);
                             $user->accessLevel = User::LEVEL_MEMBER;
                             $user->tbl_relation = 'tbl_userpeserta';
                             if ($user->save()) {
@@ -195,8 +195,6 @@ class PesertaController extends Controller {
      */
     public function actionAsesor() {
         $hasAccess = Userasesor::model()->hasAccess();
-
-        $hasAccess->assessor_id;
 
         //$dataProvider=new CActiveDataProvider('Peserta');
         $model = new Peserta('search');
@@ -287,7 +285,7 @@ class PesertaController extends Controller {
     public function actionLoadProcessingByassessor() {
         $hasAccess = Userasesor::model()->hasAccess();
 
-        $hasAccess->assessor_id;
+
 
         $criteria = new CDbCriteria;
 

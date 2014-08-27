@@ -11,7 +11,7 @@
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'SISTIM ADMIN',
-	'theme'=>'admin',
+	'theme'=>'newtheme',
 
 	// preloading 'log' component
 	'preload'=>array('log'),
