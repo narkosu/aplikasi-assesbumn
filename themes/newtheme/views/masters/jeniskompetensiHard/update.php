@@ -15,6 +15,10 @@ $this->menu=array(
 	array('label'=>'Manage JeniskompetensiHard', 'url'=>array('admin')),
 );
 ?>
+<div class="contentinner content-dashboard">                
+<div class="row-fluid">
+  <div class="span16"> 
+
 <div class="header-page">
 	<div style="float:left;vertical-align: middle;">
 		<h2 class="textTitle">Update Jenis Kompetensi Hard</h2>
@@ -27,4 +31,7 @@ $this->menu=array(
 
 <div class="container-page">
     <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+</div>
+</div>
+</div>
 </div>

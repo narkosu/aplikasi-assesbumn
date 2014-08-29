@@ -1,14 +1,14 @@
 <?php
-/* @var $this JeniskompetensiController */
+/* @var $this DeputiController */
 /* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs=array(
-	'Jeniskompetensis',
+	'Deputis',
 );
 
 $this->menu=array(
-	array('label'=>'Create Jeniskompetensi', 'url'=>array('create')),
-	array('label'=>'Manage Jeniskompetensi', 'url'=>array('admin')),
+	array('label'=>'Create Deputi', 'url'=>array('create')),
+	array('label'=>'Manage Deputi', 'url'=>array('admin')),
 );
 ?>
 <div class="contentinner content-dashboard">                
@@ -16,16 +16,17 @@ $this->menu=array(
   <div class="span16"> 
 <?php $this->renderPartial('_submenu'); ?>
 <div id="subcontainer">
-<h1>Jenis Kompetensi</h1>
+<h1>Master Deputi</h1>
+
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'unitkerja-grid',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
+	'id'=>'departement-grid',
+	'dataProvider'=>$dataProvider->search(),
+	'filter'=>$dataProvider,
 	'columns'=>array(
 		'id',
 		'dept.name',
-		'name',
-		'keterangan',
+		'deputi_name',
+		'status',
 		array(
 			'class'=>'CButtonColumn',
 		),

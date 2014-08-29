@@ -41,7 +41,7 @@ class Masterskj extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('departement_id, skj_name', 'required'),
-			array('departement_id,tahun', 'numerical', 'integerOnly'=>true),
+			array('departement_id,tahun,type', 'numerical', 'integerOnly'=>true),
 			array('skj_name', 'length', 'max'=>255),
 			array('status', 'length', 'max'=>45),
 			array('tgl_selesai', 'length', 'max'=>45),

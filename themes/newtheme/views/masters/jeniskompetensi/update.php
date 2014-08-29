@@ -15,7 +15,14 @@ $this->menu=array(
 	array('label'=>'Manage Jeniskompetensi', 'url'=>array('admin')),
 );
 ?>
-
-<h1>Update Jeniskompetensi <?php echo $model->id; ?></h1>
+<div class="contentinner content-dashboard">                
+<div class="row-fluid">
+  <div class="span16"> 
+<?php $this->renderPartial('_submenu'); ?>
+<h1>Update Jenis Kompetensi <?php echo $model->id; ?></h1>
 
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+  </div>
+  </div>
+  </div>
+  </div>

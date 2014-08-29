@@ -11,6 +11,10 @@ $this->menu=array(
 	array('label'=>'Manage KompetensiHard', 'url'=>array('admin')),
 );
 ?>
+<div class="contentinner content-dashboard">                
+<div class="row-fluid">
+  <div class="span16"> 
+
 
 <div class="header-page">
 	<div style="float:left;vertical-align: middle;">
@@ -43,5 +47,8 @@ $this->menu=array(
 		),
 	),
 )); ?>
+</div>
+</div>
+</div>
 </div>
     

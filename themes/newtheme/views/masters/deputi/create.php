@@ -1,15 +1,15 @@
 <?php
-/* @var $this JeniskompetensiController */
-/* @var $model Jeniskompetensi */
+/* @var $this DeputiController */
+/* @var $model Deputi */
 
 $this->breadcrumbs=array(
-	'Jeniskompetensis'=>array('index'),
+	'Deputis'=>array('index'),
 	'Create',
 );
 
 $this->menu=array(
-	array('label'=>'List Jeniskompetensi', 'url'=>array('index')),
-	array('label'=>'Manage Jeniskompetensi', 'url'=>array('admin')),
+	array('label'=>'List Deputi', 'url'=>array('index')),
+	array('label'=>'Manage Deputi', 'url'=>array('admin')),
 );
 ?>
 <div class="contentinner content-dashboard">                
@@ -17,7 +17,7 @@ $this->menu=array(
   <div class="span16"> 
 <?php $this->renderPartial('_submenu'); ?>
 <div id="subcontainer">
-<h1>Tambah Jenis Kompetensi</h1>
+<h1>Create Deputi</h1>
 
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
 </div>
